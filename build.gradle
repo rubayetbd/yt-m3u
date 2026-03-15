@@ -11,27 +11,21 @@ repositories {
 }
 
 dependencies {
-
     implementation 'com.google.code.gson:gson:2.10.1'
-
     implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.24.6'
-
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
 
 jar {
-
     manifest {
         attributes(
-                'Main-Class': 'io.github.rubayet123.Main'
+            'Main-Class': 'io.github.rubayet123.Main'
         )
     }
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from {
-        configurations.runtimeClasspath.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
