@@ -10,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Java 17
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+      # 3️⃣ Cache Gradle dependencies
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -27,19 +30,26 @@ jobs:
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
+      # 4️⃣ Setup Gradle
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      # 5️⃣ Build Java project
       - name: Build
         run: gradle build --no-daemon
 
+      # 6️⃣ Generate playlist and proxy streams
       - name: Generate playlist
         run: java -jar build/libs/yt-m3u-1.0.jar
 
+      # 7️⃣ Commit and push changes (playlist + cache + streams)
       - name: Commit playlist
         run: |
           git config --global user.name "playlist-bot"
           git config --global user.email "bot@github.com"
-          git add playlist.m3u cache.json
-          git commit -m "Auto update playlist" || echo "No changes"
+          
+          git add playlist.m3u cache.json streams/
+          
+          # commit only if there are changes
+          git diff --cached --quiet || git commit -m "Auto update playlist"
           git push
