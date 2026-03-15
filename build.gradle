@@ -7,13 +7,14 @@ version '1.0'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
 
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    implementation 'org.schabi.newpipe:extractor:0.24.6'
+    implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.24.6'
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
@@ -29,6 +30,8 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }
